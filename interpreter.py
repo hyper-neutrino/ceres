@@ -1,39 +1,33 @@
-from parser import Section
-from sympy import *
+from tokenizer import tokenize
+from preprocessor import preprocess
+from modeselector import select
 
-PHI = (1 + sqrt(5)) / 2
+from stack import Stack
 
-def fibonacci(index):
-	return (PHI ** index - ((-PHI) ** (-index))) / sqrt(5)
+def interpret(functions, arguments):
+	for function in functions:
+		s = Stack(None)
+		try:
+			function(s, arguments)
+			print(function, s)
+		except:
+			print(function, 'requires things on the stack or is broken')
+	stack = Stack(arguments)
+	print(stack)
+	for function in functions:
+		function(stack, arguments)
+		print(stack)
+	return stack
 
-cache = {}
+def evaluate(code, arguments):
+	return interpret(select(preprocess(tokenize(code)), arguments[0]).funclist, arguments)
 
-def evaluate(codetree):
-	pass
+def IN(prompt = ''):
+	print(prompt, end = '')
+	inp = input().strip()
+	if not inp: return [0]
+	return [eval(inp)]
 
-def _interpret(sections, index, *args):
-	matching = []
-	maxpriority = max(map(Section.priority, sections))
-	selected = None
-	for section in sections:
-		if section.matches(index):
-			if section.priority == maxpriority:
-				selected = section
-				break
-			else:
-				matching.append(section)
-	if not selected:
-		if not matching:
-			return fibonacci(index)
-		else:
-			maxpriority = max(map(Section.priority, matching))
-			selected = [match for match in matching if match.priority == maxpriority]
-
-def interpret(sections, index, *args):
-	key = (sections, index) + tuple(args)
-	if key in cache:
-		return cache[key]
-	else:
-		result = _interpret(sections, index)
-		cache[key] = result
-		return result
+if __name__ == '__main__':
+	while True:
+		print(evaluate(input(), IN()))

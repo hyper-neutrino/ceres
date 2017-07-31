@@ -1,22 +1,30 @@
 import primes
 
+def _(function):
+	def internal(functions):
+		func = functions.pop()
+		functions.append(function(func))
+	return internal
+
+def __(function):
+	def internal(functions):
+		func1 = functions.pop()
+		func2 = functions.pop()
+		functions.append(function(func2, func1))
+	return internal
+
 atoms = {
-	'P': primes.Primes.isPrime
+	'P': lambda stack, arguments: stack.push(primes.Primes.isPrime(stack.pop()))
 }
 
 quicks = {
-	'€': lambda function: 0
+	'$': __(lambda func1, func2: lambda stack, arguments: bool(func1(stack, arguments)) ^ bool(func2(stack, arguments)))
 }
 
-nilads = []
-
-monads = ['P']
-
-dyads = []
-
-quicks = []
-
 def safeGetFunction(key):
-	if key in functions:
-		return functions[key]
-	return key
+	if key in atoms:
+		return atoms[key]
+	elif key in quicks:
+		return quicks[key]
+	else:
+		return key
