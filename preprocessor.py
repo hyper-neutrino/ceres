@@ -25,7 +25,11 @@ def preprocess(tokens):
 			if not components: components.append((0, lambda arguments: True, []))
 			if token[0] == 'literal':
 				value = deepcopy(token[1])
-				components[-1][2].append(lambda stack, arguments: chain(print(value), stack.push(value)))
+				def pusher(value):
+					def push(stack, arguments):
+						stack.push(value)
+					return push
+				components[-1][2].append(pusher(value))
 			elif token[0] == 'atom':
 				components[-1][2].append(token[1])
 			elif token[0] == 'quick':
