@@ -1,11 +1,6 @@
 import sys
 import interpreter
 
-code_page  = '''................................ !"#$%&'()*+,-./0123456789:;<=>?'''
-code_page += '''@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~.'''
-code_page += '''................................................................'''
-code_page += '''............................................................≺≻≼≽'''
-
 usage = '''
 
 Ceres - A sequence-oriented recreational golfing language
@@ -16,12 +11,22 @@ ceres.py f <file> [arguments...] - Evaluate Ceres code from the contents of the 
 
 '''
 
+def unbool(array):
+	if isinstance(array, list):
+		return list(map(unbool, array))
+	return 1. if array is True else 0. if array is False else array
+
+def cut(array):
+	if isinstance(array, list):
+		return list(map(cut, array))
+	return int(array) if isinstance(array, (int, float, complex)) and array % 1 == 0 else array
+
 if __name__ == '__main__':
 	if len(sys.argv) < 3 or sys.argv[1] not in 'ef': raise SystemExit(usage)
 	if sys.argv[1] == 'e':
 		code = sys.argv[2]
 	else:
 		code = open(sys.argv[2]).read()
-	arguments = list(map(eval, sys.argv[3:]))
+	arguments = list(map(interpreter.floatify, map(eval, sys.argv[3:])))
 	result = interpreter.evaluate(code, arguments)
-	if result: print(result.pop())
+	if result: print(cut(unbool(result.pop())))

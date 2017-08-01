@@ -4,7 +4,10 @@ import tokenizer
 def select(modes, arguments):
 	arguments = arguments or [0]
 	matching = []
-	max_priority = max(map(Mode.priority, modes))
+	try:
+		max_priority = max(map(Mode.priority, modes))
+	except ValueError:
+		raise RuntimeError('Empty code is invalid')
 	selected = None
 	for mode in modes:
 		if mode.verifier(arguments[0]):

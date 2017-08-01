@@ -1,5 +1,4 @@
 import functions
-import arities
 
 def parseNumber(string, default = 0):
 	if 'ȷ' in string:
@@ -28,6 +27,10 @@ modes = {
 	'≽': (1, 1, lambda value, argument: value >= argument)
 }
 
+supermodes = {
+	'∀': (2, lambda mode1, mode2: (max([mode1[0], mode2[0]]), lambda value: mode1[1](value) and mode2[1](value)))
+}
+
 def force_literal_eval(token):
 	if token[0] == 'literal':
 		return token[1]
@@ -42,7 +45,7 @@ class Tokenizer:
 		return self
 	def __next__(self):
 		if self.index >= len(self.code): raise StopIteration
-		if self.code[self.index] == ' ': self.index += 1; return self.__next__()
+		if self.code[self.index] in ' \n\t\r\f': self.index += 1; return self.__next__()
 		if self.code[self.index] in '0123456789-.ıȷ':
 			decimals = self.code[self.index] == '.'
 			rcurrent = self.code[self.index]
@@ -76,16 +79,20 @@ class Tokenizer:
 		elif self.code[self.index] in 'ÆæŒœ':
 			self.index += 2
 			key = self.code[self.index - 2:self.index]
-			return ('atom', (arities.arities[key], functions.safeGetFunction(key)))
+			return ('atom', functions.safeGetFunction(key))
 		elif self.code[self.index] in modes:
 			mode = modes[self.code[self.index]]
 			self.index += 1
 			arguments = [force_literal_eval(self.__next__()) for i in range(mode[0])]
 			return ('mode', (mode[1], lambda value: mode[2](value, *arguments)))
+		elif self.code[self.index] in supermodes:
+			supermode = supermodes[self.code[self.index]]
+			modes = [self.__next__() for i in range(supermode[0])]
+			return ('mode', supermode[1](modes))
 		elif self.code[self.index] in functions.atoms:
 			self.index += 1
 			key = self.code[self.index - 1]
-			return  ('atom', (arities.arities[key], functions.safeGetFunction(key)))
+			return  ('atom', functions.safeGetFunction(key))
 		elif self.code[self.index] in functions.quicks:
 			self.index += 1
 			return ('quick', functions.safeGetFunction(self.code[self.index - 1]))

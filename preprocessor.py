@@ -2,12 +2,6 @@ import tokenizer
 from copy import deepcopy
 from core import chain
 
-class Atom:
-	def __init__(self, function):
-		self.function = function
-	def __call__(self, arguments):
-		return self.function(arguments)
-
 class Mode:
 	def __init__(self, priority, verifier, funclist):
 		self.priority, self.verifier, self.funclist = priority, verifier, funclist
@@ -26,10 +20,10 @@ def preprocess(tokens):
 			if token[0] == 'literal':
 				value = deepcopy(token[1])
 				def pusher(value):
-					def push(stack, arguments):
-						stack.push(value)
-					return push
-				components[-1][2].append((0, pusher(value)))
+					def get(stack, arguments):
+						return value
+					return get
+				components[-1][2].append(pusher(value))
 			elif token[0] == 'atom':
 				components[-1][2].append(token[1])
 			elif token[0] == 'quick':
