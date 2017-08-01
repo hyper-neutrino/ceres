@@ -1,3 +1,8 @@
+import primes
+import operator
+import math
+import functions
+
 from tokenizer import tokenize
 from preprocessor import preprocess
 from modeselector import select
@@ -6,8 +11,8 @@ from stack import Stack
 
 from copy import deepcopy
 
-def interpret(functions, arguments):
-	stack = Stack([], deepcopy(arguments))
+def interpret(functions, arguments, evalr):
+	stack = Stack([], deepcopy(arguments), evalr, arguments[0])
 	while functions:
 		value = functions.pop(0)(stack, arguments)
 		if value == None: continue
@@ -16,7 +21,7 @@ def interpret(functions, arguments):
 	return stack
 
 def evaluate(code, arguments):
-	return interpret(select(preprocess(tokenize(code)), arguments).funclist, arguments)
+	return interpret(select(preprocess(tokenize(code)), arguments).funclist, arguments, lambda vals: evaluate(code, vals))
 
 def floatify(val):
 	if isinstance(val, (list, tuple)): return list(map(floatify, list(val)))

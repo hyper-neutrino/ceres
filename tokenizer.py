@@ -22,11 +22,15 @@ modes = {
 	'≺': (1, 1, lambda value, argument: value < argument),
 	'≻': (1, 1, lambda value, argument: value > argument),
 	'≼': (1, 1, lambda value, argument: value <= argument),
-	'≽': (1, 1, lambda value, argument: value >= argument)
+	'≽': (1, 1, lambda value, argument: value >= argument),
+	'♂': (0, 1, lambda value: value % 2 == 1),
+	'♀': (0, 1, lambda value: value % 2 == 0),
+	'¦': (1, 1, lambda value, argument: value % argument == 0),
 }
 
 supermodes = {
-	'∀': (2, lambda mode1, mode2: (max([mode1[0], mode2[0]]), lambda value: mode1[1](value) and mode2[1](value)))
+	'∀': (2, lambda mode1, mode2: (max([mode1[1][0], mode2[1][0]]), lambda value: mode1[1][1](value) and mode2[1][1](value))),
+	'ñ': (1, lambda mode: (mode[1][0], lambda value: not mode(value))),
 }
 
 def force_literal_eval(token):
@@ -85,8 +89,9 @@ class Tokenizer:
 			return ('mode', (mode[1], lambda value: mode[2](value, *arguments)))
 		elif self.code[self.index] in supermodes:
 			supermode = supermodes[self.code[self.index]]
+			self.index += 1
 			modes_ = [self.__next__() for i in range(supermode[0])]
-			return ('mode', supermode[1](modes_))
+			return ('mode', supermode[1](*modes_))
 		elif self.code[self.index] in functions.atoms:
 			self.index += 1
 			key = self.code[self.index - 1]

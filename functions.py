@@ -152,7 +152,7 @@ def undigits(base):
 	return _i(veclist(inner))
 
 atoms = {
-	'Ḏ': Stack.peek,
+	'Ḏ': lambda stack, arguments: stack.push(stack.peek()),
 	'P': _(vectorize1(reqInt(primes.Primes.isPrime))),
 	'Ṗ': _(vectorize1(reqInt(primes.Primes.generatePrimesUpTo))),
 	'Ṕ': _(vectorize1(reqInt(primes.Primes.nextPrime))),
@@ -203,6 +203,17 @@ atoms = {
 	'⁻': _(vectorize1(lambda x: x - 1)),
 	'⁼': __(lambda x, y: x == y),
 	'!': _(vectorize1(lambda x: math.gamma(x + 1))),
+	'₁': lambda stack, arguments: stack.evalr([stack.index - 1]).pop(),
+	'₂': lambda stack, arguments: stack.evalr([stack.index - 2]).pop(),
+	'₃': lambda stack, arguments: stack.evalr([stack.index - 3]).pop(),
+	'₄': lambda stack, arguments: stack.evalr([stack.index - 4]).pop(),
+	'₅': lambda stack, arguments: stack.evalr([stack.index - 5]).pop(),
+	'₆': lambda stack, arguments: stack.evalr([stack.index - 6]).pop(),
+	'₇': lambda stack, arguments: stack.evalr([stack.index - 7]).pop(),
+	'₈': lambda stack, arguments: stack.evalr([stack.index - 8]).pop(),
+	'₉': lambda stack, arguments: stack.evalr([stack.index - 9]).pop(),
+	'¹': lambda stack, arguments: stack.pop(),
+	'²': _(vectorize1(lambda x: x ** 2)),
 }
 
 def _p(function):

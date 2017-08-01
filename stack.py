@@ -1,7 +1,9 @@
 class Stack:
-	def __init__(self, stack = None, extras = None):
+	def __init__(self, stack = None, extras = None, evalr = None, index = 0):
 		self.stack = stack and list(stack) or []
 		self.extras = extras and list(extras) or []
+		self.evalr = evalr if isinstance(evalr, (type(print), type(lambda:0))) else lambda *a: evalr
+		self.index = index
 	def pop(self):
 		if not self.stack and self.extras: return self.extras.pop(0)
 		return self.stack.pop()
