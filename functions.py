@@ -1,6 +1,7 @@
 import primes
 import operator
 import math
+import codepage
 
 from stack import Stack
 from copy import deepcopy
@@ -185,6 +186,7 @@ atoms = {
 	'Æw': _i(tuple),
 	'ÆṘ': _i(lambda x: x[::-1] if isinstance(x, list) else [x]),
 	'ÆP': lambda stack, arguments: ''.join(flatten(vectorize1(reqInt(chr))(stack.pop()))),
+	'Æp': lambda stack, arguments: ''.join(flatten(vectorize1(reqInt(codepage.codepage.__getitem__))(stack.pop()))),
 	'ŒB': _i(vectorize1(lambda x: x[:-1] + x[::-1] if isinstance(x, list) else [x], 1)),
 	'ŒḂ': _i(lambda x: x[:-1] + x[::-1] if isinstance(x, list) else [x]),
 	'+': __(vectorize2(operator.add)),

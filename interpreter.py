@@ -12,6 +12,7 @@ from stack import Stack
 from copy import deepcopy
 
 def interpret(functions, arguments, evalr):
+	arguments = arguments or [0]
 	stack = Stack([], deepcopy(arguments), evalr, arguments[0])
 	while functions:
 		value = functions.pop(0)(stack, arguments)

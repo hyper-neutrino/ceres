@@ -1,4 +1,5 @@
 import functions
+import codepage
 from sympy import Rational
 
 def parseNumber(string, default = Rational(0)):
@@ -78,6 +79,14 @@ class Tokenizer:
 					sections[-1] += self.code[self.index]
 				self.index += 1
 			return ('literal', [item[0][1] for item in map(tokenize, sections) if len(item) == 1 and item[0][0] == 'literal'])
+		elif self.code[self.index] == '“':
+			numbers = []
+			self.index += 1
+			while self.code[self.index] != '”':
+				numbers.append(codepage.codepage.index(self.code[self.index]))
+				self.index += 1
+			self.index += 1
+			return ('literal', numbers)
 		elif self.code[self.index] in 'ÆæŒœ':
 			self.index += 2
 			key = self.code[self.index - 2:self.index]

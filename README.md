@@ -9,6 +9,9 @@ Each program can consist of more than one section, only one of which is actually
 
 If the program does not start with a section delimiting character, then it is assumed to match everything and have priority 0.
 
+# literals
+Numeric literals and list literals are supported. Exp-10 literals are supported with `[left]ȷ[right] = left * 10 ** right`. `a.` is equivlent to `a.5`. `-` is `-1`, `.` is `.5`, and `-.` is `-.5`. `.a` is what it looks like. `“...”` denotes a base 255 number.
+
 ### section types
 
 |Syntax|Description|Priority|
@@ -62,6 +65,7 @@ If the program does not start with a section delimiting character, then it is as
 |`Æw`|Push each element of `z` or the entire stack individually|0|
 |`ÆṘ`|Reverse `z` or the entire stack|0|
 |`ÆP`|`chr`|inf|
+|`Æp`|Index into the codepage|inf|
 |`ŒḂ`|Bounce; returns `z[:-1] + z[::-1]`|0|
 |`ŒB`|Bounce; returns `z[:-1] + z[::-1]`|1|
 |`+`|Addition|inf|
