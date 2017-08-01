@@ -33,6 +33,10 @@ If the program does not start with a section delimiting character, then it is as
 |`P`|Is the `z` a prime?|inf|
 |`Ṗ`|Largest prime that is not greater than `z`|inf|
 |`Ṕ`|Smallest prime that is not less than `z`|inf|
+|`B`|Binary digits|inf|
+|`Ḃ`|Binary digits to integer|-1|
+|`D`|Decimal digits|inf|
+|`Ḋ`|Decimal digits to integer|-1|
 |`E`|All element of `z` or the entire stack are equal|0|
 |`F`|Flatten|0|
 |`I`|Deltas of `z` or the entire stack|0|
@@ -47,6 +51,8 @@ If the program does not start with a section delimiting character, then it is as
 |`Ṡ`|Cumulative sum of `z` or the entire stack|0|
 |`∘`|Product of `z` or the entire stack|0|
 |`Z`|Zip of `z` or the entire stack|0|
+|`d`|Arbitrary base digits|0|
+|`ḋ`|Arbitrary base digits to integer|0|
 |`m`|Mold left like right|0|
 |`r`|Inclusive range|inf|
 |`z`|Zip with filler|0|

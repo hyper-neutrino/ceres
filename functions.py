@@ -117,23 +117,52 @@ def incrange(left, right):
 	delta = 1 if right > left else -1
 	return list(range(left, right + delta, delta))
 
-def differences(array):
-	if depth(array) == 1: return [array[i] - array[i - 1] for i in range(1, len(array))]
-	if depth(array) == 0: return []
-	return list(map(differences, array))
+def veclist(function):
+	def inner(array):
+		if depth(array) == 1: return function(array)
+		if depth(array) == 0: return function([array])
+		return list(map(inner, array))
+	return inner
+
+differences = _i(veclist(lambda array: [array[i] - array[i - 1] for i in range(1, len(array))]))
 
 def Range(start, end, inclstart, inclend):
 	sign = 1 if end > start else -1
 	return list(range(start + sign * (1 - inclstart), end + sign * inclend, sign))
+
+def basedigits(base):
+	def inner(number):
+		if number < 0: return [-x for x in inner(-number)]
+		digits = []
+		if number == 0: return [0]
+		if number % 1:
+			digits = inner(int(number))
+			digits[-1] += number % 1
+			return digits
+		number = int(number)
+		for power in range(int(math.log(number, base)), -1, -1):
+			digits.append(number // base ** power)
+			number %= base ** power
+		return digits
+	return inner
+
+def undigits(base):
+	def inner(array):
+		return sum(array[-i - 1] * base ** i for i in range(len(array)))
+	return _i(veclist(inner))
 
 atoms = {
 	'Ḏ': Stack.peek,
 	'P': _(vectorize1(reqInt(primes.Primes.isPrime))),
 	'Ṗ': _(vectorize1(reqInt(primes.Primes.generatePrimesUpTo))),
 	'Ṕ': _(vectorize1(reqInt(primes.Primes.nextPrime))),
+	'B': _(vectorize1(basedigits(2))),
+	'Ḃ': undigits(2),
+	'D': _(vectorize1(basedigits(10))),
+	'Ḋ': undigits(10),
 	'E': _i(lambda x: all(k == x[0] for k in x)),
 	'F': _(flatten),
-	'I': _i(differences),
+	'I': differences,
 	'J': _i(lambda x: list(range(1, len(x) + 1))),
 	'K': _i(lambda x: mold(list(range(1, len(flatten(x)) + 1)), x)),
 	'L': _(len),
@@ -145,6 +174,8 @@ atoms = {
 	'Ṡ': cumsum,
 	'∘': smartprod,
 	'Z': _(czip()),
+	'd': lambda stack, arguments: _(vectorize1(basedigits(stack.pop())))(Stack([stack.pop()]), arguments),
+	'ḋ': lambda stack, arguments: undigits(stack.pop())(stack, arguments),
 	'm': __(mold),
 	'r': __(vectorize2(reqInt(incrange))),
 	'z': __(lambda x, y: czip(x)(y)),

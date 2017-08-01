@@ -1,22 +1,20 @@
 import functions
+from sympy import Rational
 
-def parseNumber(string, default = 0):
+def parseNumber(string, default = Rational(0)):
 	if 'ȷ' in string:
 		left, right = tuple(string.split('ȷ'))
 		return parseNumber(left, 1) * 10 ** parseNumber(right, 3)
-	elif 'ı' in string:
-		left, right = tuple(string.split('ı'))
-		return parseNumber(left, 0) + parseNumber(right, 1) * 1j
 	elif string == '-':
-		return -1
+		return Rational(-1)
 	elif string == '.':
-		return 0.5
+		return Rational('0.5')
 	elif string == '-.':
-		return -0.5
+		return Rational('-0.5')
 	elif string.endswith('.'):
-		return float(string) + 0.5
+		return Rational(string) + 0.5
 	elif string:
-		return float(string)
+		return Rational(string)
 	else:
 		return default
 
@@ -87,8 +85,8 @@ class Tokenizer:
 			return ('mode', (mode[1], lambda value: mode[2](value, *arguments)))
 		elif self.code[self.index] in supermodes:
 			supermode = supermodes[self.code[self.index]]
-			modes = [self.__next__() for i in range(supermode[0])]
-			return ('mode', supermode[1](modes))
+			modes_ = [self.__next__() for i in range(supermode[0])]
+			return ('mode', supermode[1](modes_))
 		elif self.code[self.index] in functions.atoms:
 			self.index += 1
 			key = self.code[self.index - 1]
