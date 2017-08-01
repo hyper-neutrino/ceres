@@ -1,5 +1,5 @@
 # ceres
-Ceres is a recreational programming language focusing on making fast and short programs to generalize sequences, specifically those commonly showing up on OEIS.
+Ceres is a recreational stack-based programming language mainly for golfing.
 
 # inputs
 Typically, a program should only receive one input, which is the sequence index. However, other inputs which might act as sequence variants will be accessible to the programmer as well.
