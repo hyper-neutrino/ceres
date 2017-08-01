@@ -29,7 +29,7 @@ def preprocess(tokens):
 					def push(stack, arguments):
 						stack.push(value)
 					return push
-				components[-1][2].append(pusher(value))
+				components[-1][2].append((0, pusher(value)))
 			elif token[0] == 'atom':
 				components[-1][2].append(token[1])
 			elif token[0] == 'quick':

@@ -1,11 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-'''
-Tokenizer for
-'''
-
 import functions
+import arities
 
 def parseNumber(string, default = 0):
 	if 'ȷ' in string:
@@ -81,7 +75,8 @@ class Tokenizer:
 			return ('literal', [item[0][1] for item in map(tokenize, sections) if len(item) == 1 and item[0][0] == 'literal'])
 		elif self.code[self.index] in 'ÆæŒœ':
 			self.index += 2
-			return ('atom', functions.safeGetFunction(self.code[self.index - 2:self.index]))
+			key = self.code[self.index - 2:self.index]
+			return ('atom', (arities.arities[key], functions.safeGetFunction(key)))
 		elif self.code[self.index] in modes:
 			mode = modes[self.code[self.index]]
 			self.index += 1
@@ -89,7 +84,8 @@ class Tokenizer:
 			return ('mode', (mode[1], lambda value: mode[2](value, *arguments)))
 		elif self.code[self.index] in functions.atoms:
 			self.index += 1
-			return  ('atom', functions.safeGetFunction(self.code[self.index - 1]))
+			key = self.code[self.index - 1]
+			return  ('atom', (arities.arities[key], functions.safeGetFunction(key)))
 		elif self.code[self.index] in functions.quicks:
 			self.index += 1
 			return ('quick', functions.safeGetFunction(self.code[self.index - 1]))

@@ -13,8 +13,15 @@ def __(function):
 		functions.append(function(func2, func1))
 	return internal
 
+def depth(value):
+	if isinstance(value, list):
+		return max(map(depth, value))
+	else:
+		return 0
+
 atoms = {
-	'P': lambda stack, arguments: stack.push(primes.Primes.isPrime(stack.pop()))
+	'P': lambda stack, arguments: stack.push(primes.Primes.isPrime(stack.pop())),
+	'+': lambda stack, arguments: stack.push(stack.pop() + stack.pop())
 }
 
 quicks = {

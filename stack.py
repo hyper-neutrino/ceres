@@ -15,7 +15,8 @@ class Stack:
 		return values
 	def get(self):
 		return [x for x in self.stack]
-	def push(self, value):
-		self.stack.append(value)
+	def push(self, *values):
+		for value in values: self.stack.append(value)
 	def  __str__(self): return str(self.stack)
 	def __repr__(self): return str(self.stack)
+	def __len__(self): return len(self.stack)
