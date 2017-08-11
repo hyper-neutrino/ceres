@@ -303,6 +303,15 @@ def exists(function):
 def notexists(function):
 	return exists(lambda x,a: not function(x,a))
 
+def swapper(function):
+	def inner(stack, arguments):
+		value = stack.pop()
+		lower = stack.pop()
+		stack.push(value)
+		stack.push(lower)
+		return function(stack, arguments)
+	return inner
+
 quicks = {
 	'$': _q(join, 2),
 	'€': _q(mapper, 1),
@@ -317,6 +326,7 @@ quicks = {
 	'\\': _q(cumreducer, 1),
 	'∃': _q(exists, 1),
 	'∄': _q(notexists, 1),
+	'@': _q(swapper, 1)
 }
 
 def safeGetFunction(key):
