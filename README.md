@@ -74,7 +74,7 @@ Numeric literals and list literals are supported. Exp-10 literals are supported 
 |`⨉`|Multiplication|inf|
 |`^`|Bitwise XOR|inf|
 |`&`|Bitwise AND|inf|
-|`[pipe]`|Bitwise OR (someone figure out how to make markdown stop being stupid)|inf|
+|`\|`|Bitwise OR|inf|
 |`%`|Modulo|inf|
 |`=`|Equals|inf|
 |`∈`|Contains|0|
